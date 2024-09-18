@@ -1,0 +1,28 @@
+services:
+  _defaults:
+    autowire: true        # Enables automatic injection based on type-hints
+    autoconfigure: true   # Autoconfigures tags based on Symfony conventions
+    public: false         # Services are private by default
+
+
+  Produzentenstolz\Produzentenstolz\Domain\Repository\PsDataRepository:
+    class: Produzentenstolz\Produzentenstolz\Domain\Repository\PsDataRepository
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  Produzentenstolz\Produzentenstolz\Controller\ProduzentenstolzController:
+    class: Produzentenstolz\Produzentenstolz\Controller\ProduzentenstolzController
+    arguments:
+      $requestFactory: '@TYPO3\CMS\Core\Http\RequestFactory'
+    tags:
+      - name: 'typo3.cms.controller'
+
+  Produzentenstolz\Produzentenstolz\Controller\ProxyController:
+    class: Produzentenstolz\Produzentenstolz\Controller\ProxyController
+    arguments:
+      $requestFactory: '@TYPO3\CMS\Core\Http\RequestFactory'
+      $responseFactory: '@TYPO3\CMS\Core\Http\ResponseFactory'
+      $streamFactory: '@TYPO3\CMS\Core\Http\StreamFactory'
+    tags:
+      - name: 'typo3.cms.controller'

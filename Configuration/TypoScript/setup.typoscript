@@ -1,0 +1,30 @@
+plugin.tx_produzentenstolz {
+    view {
+        templateRootPaths.0 = EXT:produzentenstolz/Resources/Private/Templates/
+        templateRootPaths.1 = {$plugin.tx_produzentenstolz.view.templateRootPath}
+        partialRootPaths.0 = EXT:produzentenstolz/Resources/Private/Partials/
+        partialRootPaths.1 = {$plugin.tx_produzentenstolz.view.partialRootPath}
+        layoutRootPaths.0 = EXT:produzentenstolz/Resources/Private/Layouts/
+        layoutRootPaths.1 = {$plugin.tx_produzentenstolz.view.layoutRootPath}
+    }
+
+    features {
+        #skipDefaultArguments = 1
+        # if set to 1, the enable fields are ignored in BE context
+        ignoreAllEnableFieldsInBe = 0
+    }
+    mvc {
+        #callDefaultActionIfActionCantBeResolved = 1
+    }
+    settings {
+        restaurantId = {$plugin.tx_produzentenstolz.settings.restaurantId}
+    }
+}
+
+page {
+    includeCSS {
+        ps_10 = EXT:produzentenstolz/Resources/Public/Css/leaflet.css
+        ps_20 = EXT:produzentenstolz/Resources/Public/Css/ps_list_style.css
+        ps_30 = EXT:produzentenstolz/Resources/Public/Css/ps_map_style.css
+    }
+}

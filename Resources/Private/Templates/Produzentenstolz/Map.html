@@ -1,0 +1,150 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default"/>
+
+<f:section name="content">
+  <div class="ps-map-wrapper">
+    <div id="map" style="height: 600px;"
+         data-lat="<f:format.raw>{data.manufacturers.0.lat}</f:format.raw>"
+         data-lng="<f:format.raw>{data.manufacturers.0.lng}</f:format.raw>"
+         data-rest-lat="<f:format.raw>{data.restaurant.lat}</f:format.raw>"
+         data-rest-lng="<f:format.raw>{data.restaurant.lng}</f:format.raw>"
+    >
+    </div>
+    <div class="ps-powered">
+      <div>Wir sind </div>
+      <div>
+        <a href="https://produzentenstolz.com" target="_blank">
+          <img src="https://produzentenstolz.app/assets/images/produzentenstolz_logo.svg" alt="Produzentenstolz"/>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/typo3conf/ext/produzentenstolz/Resources/Public/Js/leaflet.js"></script>
+  <script src="/typo3conf/ext/produzentenstolz/Resources/Public/Js/leaflet.markercluster.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      // set marker icons
+      var customIcon = L.icon({
+        iconUrl: '/typo3conf/ext/produzentenstolz/Resources/Public/img/leaflet/marker-icon-2x.png',
+        className: 'manufacturer-marker',
+        iconSize: [40, 51],
+        iconAnchor: [20, 34],
+      });
+
+      var restaurantIcon = L.icon({
+        iconUrl: '/typo3conf/ext/produzentenstolz/Resources/Public/img/leaflet/restaurant_pin.svg',
+        iconSize: [40, 63],
+        iconAnchor: [30, 75],
+      });
+
+
+      // we fetch lat and lng from data as fluid causes problems
+      var mapElement = document.getElementById('map');
+      var lat = mapElement.getAttribute('data-lat');
+      var lng = mapElement.getAttribute('data-lng');
+      var map = L.map('map', {
+        scrollWheelZoom: false,
+        zoomControl: false
+      }).setView([lat, lng], 13);
+
+      // set zoom position
+      L.control.zoom({
+        position: 'bottomright'
+      }).addTo(map);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      var markersCluster = new L.MarkerClusterGroup({
+        maxClusterRadius: function (zoom) {
+          return (zoom <= 14) ? 20 : 120;
+        }
+      });
+
+      // Loop through the manufacturers and add markers to the map
+      <f:for each="{data.manufacturers}" as="manufacturer">
+        var popupContent = `
+        <f:render partial="MapPopup" arguments="{assetpath: data.assetpath, manufacturer: manufacturer}"/>
+        `;
+
+        var marker = L.marker([
+        <f:format.raw>{manufacturer.lat}</f:format.raw>
+        , <f:format.raw>{manufacturer.lng}</f:format.raw>], {icon: customIcon})
+        .bindPopup(popupContent)
+        .on('click', function(e) {
+        this.openPopup();
+      });
+
+        marker.on('click', function() {
+        var url = `/index.php?eID=proxy&manufacturerId={manufacturer.id}&restaurantId={restaurantId}`;
+
+        fetch(url)
+        .then(response => response.json())
+        .then(data => console.log('Data:', data))
+        .catch(error => console.error('Tracking failed:', error));
+      });
+
+        markersCluster.addLayer(marker);
+      </f:for>
+
+      map.addLayer(markersCluster);
+
+      // set restaurant marker
+      var restLat = mapElement.getAttribute('data-rest-lat');
+      var restLng = mapElement.getAttribute('data-rest-lng');
+      var restaurantMarker = L.marker([restLat, restLng], {icon: restaurantIcon}).addTo(map);
+      var restaurantPosition = L.latLng(restLat, restLng);
+
+      var bounds = markersCluster.getBounds();
+      bounds.extend(restaurantMarker.getLatLng());
+      map.fitBounds(bounds, {padding: [100, 100]});
+
+      // show radius of manufacturers
+      var circleOptions = {
+        color: '#B44B4B',
+        opacity: 0.5,
+        fillColor: '#21ff14',
+        fillOpacity: 0.1,
+        radius: 100
+      };
+
+      var radius = Math.max(        // Calculate the radius of the circle of all restaurant manufacturers
+        restaurantPosition.distanceTo(bounds.getNorthWest()),
+        restaurantPosition.distanceTo(bounds.getNorthEast()),
+        restaurantPosition.distanceTo(bounds.getSouthWest()),
+        restaurantPosition.distanceTo(bounds.getSouthEast())
+      );
+
+      var circle = L.circle(restaurantPosition, radius, circleOptions).addTo(map);
+
+
+      L.Control.CenterMap = L.Control.extend({
+        onAdd: function (map) {
+          var container = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
+          container.style.backgroundColor = 'white';
+          container.style.width = '30px';
+          container.style.height = '30px';
+          container.style.backgroundImage = "url('/typo3conf/ext/produzentenstolz/Resources/Public/img/leaflet/layers.png')";  // Specify an icon or text for your button
+          container.style.backgroundSize = "20px 20px";
+          container.style.backgroundRepeat = "no-repeat";
+          container.style.backgroundPosition = "center";
+          container.title = "Center Map";
+
+          container.onclick = function () {
+            map.fitBounds(bounds, {padding: [100, 100]});
+          }
+
+          return container;
+        },
+
+        onRemove: function (map) {
+          // Nothing to do here
+        }
+      });
+      map.addControl(new L.Control.CenterMap({position: 'topright'}));
+    });
+  </script>
+</f:section>

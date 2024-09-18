@@ -1,0 +1,18 @@
+plugin.tx_produzentenstolz {
+    view {
+        # cat=plugin.tx_produzentenstolz/file; type=string; label=Path to template root (FE)
+        templateRootPath = EXT:produzentenstolz/Resources/Private/Templates/
+        # cat=plugin.tx_produzentenstolz/file; type=string; label=Path to template partials (FE)
+        partialRootPath = EXT:produzentenstolz/Resources/Private/Partials/
+        # cat=plugin.tx_produzentenstolz/file; type=string; label=Path to template layouts (FE)
+        layoutRootPath = EXT:produzentenstolz/Resources/Private/Layouts/
+    }
+    settings {
+        # cat=plugin.tx_produzentenstolz/api; type=int; label=Restaurant ID
+        restaurantId = 3
+    }
+    persistence {
+        # cat=plugin.tx_produzentenstolz//a; type=string; label=Default storage PID
+        storagePid =
+    }
+}

@@ -1,0 +1,25 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<div class="ps_map-card w-250">
+  <f:if condition="{manufacturer.image}">
+    <div class="ps_map-card-header p-0 pt-3 mx-3">
+      <a class="d-block ps_map-blur-shadow-image">
+        <img src='https://produzentenstolz.app/{assetpath.image}/{manufacturer.image}' />
+      </a>
+    </div>
+  </f:if>
+  <div class="ps_map-card-body pb-3 px-4">
+    <h5 class="ps_map-font-weight-normal mt-1">
+      <a href="javascript:;">{manufacturer.title}</a>
+    </h5>
+    <p class="mb-0 mt-1 ps_map-text-sm tps_map-ext-dark">
+      <f:format.raw>{manufacturer.description -> f:format.crop(maxCharacters: '200', append: '...')}</f:format.raw>
+    </p>
+  </div>
+  <f:if condition="{manufacturer.website}">
+    <hr class="dark ps_map-horizontal my-0" />
+    <div class="ps_map-card-footer d-flex py-3">
+      <a href="{manufacturer.website}" target="_blank" class="text-md">Zur Webseite</a>
+    </div>
+  </f:if>
+</div>

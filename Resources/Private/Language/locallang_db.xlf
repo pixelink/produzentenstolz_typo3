@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="EXT:produzentenstolz/Resources/Private/Language/locallang_db.xlf" date="2024-09-17T12:55:05Z" product-name="produzentenstolz">
+		<header/>
+		<body>
+			<trans-unit id="tx_produzentenstolz_list.name" resname="tx_produzentenstolz_list.name">
+				<source>Produzentenstolz Produzentenliste</source>
+			</trans-unit>
+			<trans-unit id="tx_produzentenstolz_map.name" resname="tx_produzentenstolz_map.name">
+				<source>Produzentenstolz Produzentenkarte</source>
+			</trans-unit>
+			<trans-unit id="tx_produzentenstolz_list.description" resname="tx_produzentenstolz_list.description">
+				<source></source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
