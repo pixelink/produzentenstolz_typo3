@@ -76,6 +76,15 @@
         .bindPopup(popupContent)
         .on('click', function(e) {
         this.openPopup();
+
+        setTimeout(function() {
+        var closeButton = document.querySelector('.ps-popup-close');
+        if (closeButton) {
+        closeButton.addEventListener('click', function() {
+        marker.closePopup();  // Close the popup when the close button is clicked
+      });
+      }
+      }, 100);
       });
 
         marker.on('click', function() {
