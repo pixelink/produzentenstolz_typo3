@@ -20,20 +20,22 @@
     </div>
   </div>
 
-  <script src="/typo3conf/ext/produzentenstolz/Resources/Public/Js/leaflet.js"></script>
-  <script src="/typo3conf/ext/produzentenstolz/Resources/Public/Js/leaflet.markercluster.js"></script>
+  <script src="/typo3conf/ext/produzentenstolz/Resources/Public/Js/leaflet.js?v=1.7.1"></script>
+  <script src="/typo3conf/ext/produzentenstolz/Resources/Public/Js/leaflet.markercluster.js?v=1.0.1"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // Use window.L to avoid conflicts with other scripts that shadow the global L variable
+      var Leaflet = window.L;
 
       // set marker icons
-      var customIcon = L.icon({
+      var customIcon = Leaflet.icon({
         iconUrl: '/typo3conf/ext/produzentenstolz/Resources/Public/img/leaflet/marker-icon-2x.png',
         className: 'manufacturer-marker',
         iconSize: [40, 51],
         iconAnchor: [20, 34],
       });
 
-      var restaurantIcon = L.icon({
+      var restaurantIcon = Leaflet.icon({
         iconUrl: '/typo3conf/ext/produzentenstolz/Resources/Public/img/leaflet/restaurant_pin.svg',
         iconSize: [40, 63],
         iconAnchor: [30, 75],
@@ -44,21 +46,21 @@
       var mapElement = document.getElementById('map');
       var lat = mapElement.getAttribute('data-lat');
       var lng = mapElement.getAttribute('data-lng');
-      var map = L.map('map', {
+      var map = Leaflet.map('map', {
         scrollWheelZoom: false,
         zoomControl: false
       }).setView([lat, lng], 13);
 
       // set zoom position
-      L.control.zoom({
+      Leaflet.control.zoom({
         position: 'bottomright'
       }).addTo(map);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
 
-      var markersCluster = new L.MarkerClusterGroup({
+      var markersCluster = new Leaflet.MarkerClusterGroup({
         maxClusterRadius: function (zoom) {
           return (zoom <= 14) ? 20 : 120;
         }
@@ -70,7 +72,7 @@
         <f:render partial="MapPopup" arguments="{assetpath: data.assetpath, manufacturer: manufacturer}"/>
         `;
 
-        var marker = L.marker([
+        var marker = Leaflet.marker([
         <f:format.raw>{manufacturer.lat}</f:format.raw>
         , <f:format.raw>{manufacturer.lng}</f:format.raw>], {icon: customIcon})
         .bindPopup(popupContent)
@@ -104,8 +106,8 @@
       // set restaurant marker
       var restLat = mapElement.getAttribute('data-rest-lat');
       var restLng = mapElement.getAttribute('data-rest-lng');
-      var restaurantMarker = L.marker([restLat, restLng], {icon: restaurantIcon}).addTo(map);
-      var restaurantPosition = L.latLng(restLat, restLng);
+      var restaurantMarker = Leaflet.marker([restLat, restLng], {icon: restaurantIcon}).addTo(map);
+      var restaurantPosition = Leaflet.latLng(restLat, restLng);
 
       var bounds = markersCluster.getBounds();
       bounds.extend(restaurantMarker.getLatLng());
@@ -127,12 +129,12 @@
         restaurantPosition.distanceTo(bounds.getSouthEast())
       );
 
-      var circle = L.circle(restaurantPosition, radius, circleOptions).addTo(map);
+      var circle = Leaflet.circle(restaurantPosition, radius, circleOptions).addTo(map);
 
 
-      L.Control.CenterMap = L.Control.extend({
+      Leaflet.Control.CenterMap = Leaflet.Control.extend({
         onAdd: function (map) {
-          var container = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
+          var container = Leaflet.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
           container.style.backgroundColor = 'white';
           container.style.width = '30px';
           container.style.height = '30px';
@@ -153,7 +155,7 @@
           // Nothing to do here
         }
       });
-      map.addControl(new L.Control.CenterMap({position: 'topright'}));
+      map.addControl(new Leaflet.Control.CenterMap({position: 'topright'}));
     });
   </script>
 </f:section>

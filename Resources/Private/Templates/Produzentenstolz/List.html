@@ -2,9 +2,12 @@
 <f:layout name="Default"/>
 
 <f:section name="content">
-  <div class="ps_list ce-container ce-content" style="width: 80%; margin-left: 100px;">
+  <div class="ps_list">
 
-    <f:for each="{data.manufacturers}" as="manufacturer">
+    <div id="produzenten"></div>
+    <f:render partial="Pagination" arguments="{paginator: paginator, pagination: pagination}" />
+
+    <f:for each="{manufacturers}" as="manufacturer">
       <div class="card">
         <f:if condition="{manufacturer.image}">
           <img src="https://produzentenstolz.app/{data.assetpath.image}/{manufacturer.image}"
@@ -24,6 +27,9 @@
         </div>
       </div>
     </f:for>
+
+    <f:render partial="Pagination" arguments="{paginator: paginator, pagination: pagination}" />
+
     <div class="ps-powered">
       <div>Wir sind </div>
       <div>

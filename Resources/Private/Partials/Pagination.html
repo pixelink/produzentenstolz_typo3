@@ -1,0 +1,35 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:if condition="{paginator.numberOfPages} > 1">
+  <nav class="ps_list-pagination" aria-label="Seitennavigation">
+    <f:if condition="{anchorId}">
+      <f:variable name="anchor" value="{anchorId}" />
+    </f:if>
+    <ul>
+      <f:if condition="{pagination.previousPageNumber}">
+        <li>
+          <f:link.action action="list" arguments="{currentPage: pagination.previousPageNumber}" section="produzenten">&laquo; Zurück</f:link.action>
+        </li>
+      </f:if>
+
+      <f:for each="{pagination.allPageNumbers}" as="page">
+        <f:if condition="{page} == {paginator.currentPageNumber}">
+          <f:then>
+            <li class="active"><span>{page}</span></li>
+          </f:then>
+          <f:else>
+            <li>
+              <f:link.action action="list" arguments="{currentPage: page}" section="produzenten">{page}</f:link.action>
+            </li>
+          </f:else>
+        </f:if>
+      </f:for>
+
+      <f:if condition="{pagination.nextPageNumber}">
+        <li>
+          <f:link.action action="list" arguments="{currentPage: pagination.nextPageNumber}" section="produzenten">Weiter &raquo;</f:link.action>
+        </li>
+      </f:if>
+    </ul>
+  </nav>
+</f:if>
+</html>

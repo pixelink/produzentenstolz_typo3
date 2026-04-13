@@ -10,7 +10,7 @@ defined('TYPO3') || die();
         ],
         // non-cacheable actions
         [
-
+            \Produzentenstolz\Produzentenstolz\Controller\ProduzentenstolzController::class => 'list'
         ]
     );
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
